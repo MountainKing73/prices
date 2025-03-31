@@ -78,9 +78,11 @@ fn process_request(stream: &mut TcpStream) {
                 result = (total / count) as i32;
             }
 
+            println!("sending: {}", result);
+
             let _ = stream.write(&convert_response(result));
         } else {
-            panic!("Invalid message type");
+            println!("Invalid message type: {:?}", buffer[0]);
         }
     }
 }
