@@ -42,7 +42,7 @@ fn convert_response(num: i32) -> [u8; 4] {
 }
 
 fn process_request(stream: &mut TcpStream) {
-    let mut entries: HashMap<u32, i32> = HashMap::new();
+    let mut entries: HashMap<i32, i32> = HashMap::new();
     let mut reader = BufReader::new(stream.try_clone().expect("stream clone failed"));
 
     let mut buffer = [0; 9];
@@ -56,12 +56,12 @@ fn process_request(stream: &mut TcpStream) {
         println!("Received: {:?}", buffer);
 
         if buffer[0] == b'I' {
-            let timestamp = convert_number(&buffer[1..5]) as u32;
+            let timestamp = convert_number(&buffer[1..5]);
             let price = convert_number(&buffer[5..]);
             entries.insert(timestamp, price);
         } else if buffer[0] == b'Q' {
-            let timestamp1 = convert_number(&buffer[1..5]) as u32;
-            let timestamp2 = convert_number(&buffer[5..]) as u32;
+            let timestamp1 = convert_number(&buffer[1..5]);
+            let timestamp2 = convert_number(&buffer[5..]);
 
             let mut total: i64 = 0;
             let mut count = 0;
