@@ -53,8 +53,6 @@ fn process_request(stream: &mut TcpStream) {
             break;
         }
 
-        println!("Received: {:?}", buffer);
-
         if buffer[0] == b'I' {
             let timestamp = convert_number(&buffer[1..5]);
             let price = convert_number(&buffer[5..]);
@@ -67,7 +65,6 @@ fn process_request(stream: &mut TcpStream) {
             let mut count = 0;
             for entry in &entries {
                 if timestamp1 <= *entry.0 && timestamp2 >= *entry.0 {
-                    println!("found price: {}", entry.1);
                     total += *entry.1 as i64;
                     count += 1;
                 }
@@ -77,8 +74,6 @@ fn process_request(stream: &mut TcpStream) {
             if count > 0 {
                 result = (total / count) as i32;
             }
-
-            println!("sending: {}", result);
 
             let _ = stream.write(&convert_response(result));
         } else {
