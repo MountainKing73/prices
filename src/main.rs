@@ -53,11 +53,11 @@ fn process_request(stream: &mut TcpStream) {
             break;
         }
 
-        if buffer[0] == 'I' as u8 {
+        if buffer[0] == b'I' {
             let timestamp = convert_number(&buffer[1..5]) as u32;
             let price = convert_number(&buffer[5..]);
             entries.insert(timestamp, price);
-        } else if buffer[0] == 'Q' as u8 {
+        } else if buffer[0] == b'Q' {
             let timestamp1 = convert_number(&buffer[1..5]) as u32;
             let timestamp2 = convert_number(&buffer[5..]) as u32;
 
@@ -70,7 +70,12 @@ fn process_request(stream: &mut TcpStream) {
                 }
             }
 
-            let _ = stream.write(&convert_response(total / count));
+            let mut result: i32 = 0;
+            if count > 0 {
+                result = total / count;
+            }
+
+            let _ = stream.write(&convert_response(result));
         } else {
             panic!("Invalid message type");
         }
